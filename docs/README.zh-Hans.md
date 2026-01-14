@@ -1,4 +1,6 @@
 > [!NOTE] 
+> 🎵 **Vibe Coding 项目** - 本项目由 AI 辅助开发 (Claude/Gemini)。
+>
 > 这是 [@prinsss](https://github.com/prinsss) 的 [twitter-web-exporter](https://github.com/prinsss/twitter-web-exporter) 的增强版 Fork，新增了**自动开始捕获**、**全局控制**等功能，并进行了稳定性改进。
 
 <p align="center">
