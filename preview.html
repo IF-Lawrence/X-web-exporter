@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbit Exporter - UI Preview</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #15202b;
+            color: #fff;
+        }
+
+        .preview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .preview-header {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #192734;
+            border-radius: 16px;
+        }
+
+        .preview-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .preview-header p {
+            margin: 0;
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        .preview-actions {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #1d9bf0;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #1a8cd8;
+        }
+
+        .preview-frame {
+            background: #15202b;
+            border-radius: 16px;
+            padding: 20px;
+            min-height: 600px;
+        }
+
+        #twe-root {
+            /* This is where the app will be mounted */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Override fixed positioning for preview */
+        #twe-root>section {
+            position: relative !important;
+            left: auto !important;
+            top: auto !important;
+            transform: none !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background: #192734;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .instructions h3 {
+            margin-top: 0;
+            color: #1d9bf0;
+        }
+
+        .instructions code {
+            background: #253341;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preview-container">
+        <div class="preview-header">
+            <h1>🎨 Orbit Exporter - UI Preview</h1>
+            <p>Preview and debug the UI components in isolation</p>
+        </div>
+
+        <div class="preview-actions">
+            <button class="btn" onclick="toggleControlPanel()">Toggle Control Panel</button>
+            <button class="btn" onclick="window.location.reload()">Reload Preview</button>
+            <button class="btn" onclick="openDevTools()">Open DevTools Guide</button>
+        </div>
+
+        <div class="preview-frame">
+            <!-- The app will be mounted here -->
+            <div id="twe-root"></div>
+        </div>
+
+        <div class="instructions">
+            <h3>📖 How to Use This Preview</h3>
+            <p><strong>Option 1: Load Development Build</strong></p>
+            <ol>
+                <li>Run <code>npm run dev</code> in your terminal</li>
+                <li>Open <code>http://localhost:5173/preview.html</code> in your browser</li>
+                <li>The UI will load automatically with hot reload enabled</li>
+            </ol>
+
+            <p><strong>Option 2: Load Production Build</strong></p>
+            <ol>
+                <li>Run <code>npm run build</code> in your terminal</li>
+                <li>Open this file in your browser</li>
+                <li>Open browser DevTools (F12)</li>
+                <li>In Console, paste and run:</li>
+            </ol>
+            <pre style="background: #253341; padding: 10px; border-radius: 4px; overflow-x: auto;">
+// Load the built script
+const script = document.createElement('script');
+script.src = './dist/orbit-exporter.user.js';
+document.head.appendChild(script);
+            </pre>
+
+            <p><strong>DevTools Tips:</strong></p>
+            <ul>
+                <li>Press <code>F12</code> to open DevTools</li>
+                <li>Use <code>Elements</code> tab to inspect and modify styles live</li>
+                <li>Use <code>Console</code> tab to check for errors and run commands</li>
+                <li>Right-click any element → <code>Inspect</code> to jump to it</li>
+                <li>Modify CSS in DevTools to test style changes instantly</li>
+            </ul>
+
+            <p><strong>Component Testing:</strong></p>
+            <pre style="background: #253341; padding: 10px; border-radius: 4px; overflow-x: auto;">
+// Access components from console
+window.__META_DATA__ = { userId: 'preview', userHash: 'preview' };
+
+// Force show control panel
+const panel = document.querySelector('#twe-root');
+if (panel) {
+    panel.style.transform = 'translateX(0)';
+}
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        // Mock Twitter's global object for preview
+        window.__META_DATA__ = {
+            userId: 'preview_user',
+            userHash: 'preview_hash'
+        };
+
+        // Mock GM APIs
+        window.GM_registerMenuCommand = (caption, onClick) => { console.log('GM_registerMenuCommand:', caption); };
+        window.GM_unregisterMenuCommand = () => { };
+        window.GM_getValue = (key, def) => { return localStorage.getItem('GM_' + key) || def; };
+        window.GM_setValue = (key, val) => { localStorage.setItem('GM_' + key, val); };
+        window.GM_info = { script: { version: '0.0.0' } };
+
+
+        function toggleControlPanel() {
+            const panel = document.querySelector('#twe-root > section');
+            if (panel) {
+                const isHidden = panel.style.transform === 'translate(-500px)';
+                panel.style.transform = isHidden ? 'translateX(0)' : 'translate(-500px)';
+            } else {
+                alert('Control panel not found. Please load the script first.');
+            }
+        }
+
+        function openDevTools() {
+            alert('Press F12 to open Browser DevTools\n\n' +
+                'Useful tabs:\n' +
+                '• Elements - Inspect and modify HTML/CSS\n' +
+                '• Console - Run JavaScript commands\n' +
+                '• Network - Monitor requests\n' +
+                '• Application - Check localStorage/IndexedDB');
+        }
+
+        // Auto-load in dev mode if running from vite dev server
+        if (window.location.protocol.includes('http')) {
+            console.log('Preview page loaded. Waiting for Vite to inject the app...');
+        }
+    </script>
+
+    <!-- Inject the app entry point -->
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Note: In dev mode (npm run dev), Vite will inject the app automatically -->
+    <!-- In production, you need to manually load the built script (see instructions above) -->
+</body>
+
+</html>
